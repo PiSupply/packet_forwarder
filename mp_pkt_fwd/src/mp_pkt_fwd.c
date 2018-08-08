@@ -751,9 +751,9 @@ static int parse_gateway_configuration(const char * conf_file) {
 			if (val1 != NULL) snprintf(servers[ic].port_up, sizeof servers[ic].port_up, "%u", (uint16_t)json_value_get_number(val1));
 			if (val2 != NULL) snprintf(servers[ic].port_down, sizeof servers[ic].port_down, "%u", (uint16_t)json_value_get_number(val2));
 			if (val3 != NULL) servers[ic].max_stall = (int) json_value_get_number(val3); else servers[ic].max_stall = 0;
-			if (val4 != NULL) servers[ic].upstream = (bool) json_value_get_boolean(val4); 
-			if (val5 != NULL) servers[ic].downstream = (bool) json_value_get_boolean(val5); 
-			if (vcrit != NULL) servers[ic].critical = (bool) json_value_get_boolean(vcrit); 
+			if (val4 != NULL) servers[ic].upstream = (bool) json_value_get_boolean(val4);
+			if (val5 != NULL) servers[ic].downstream = (bool) json_value_get_boolean(val5);
+			if (vcrit != NULL) servers[ic].critical = (bool) json_value_get_boolean(vcrit);
 			/* If there is no server name we can only silently progress to the next entry */
 			if (str == NULL) {
 				continue;
@@ -807,7 +807,7 @@ static int parse_gateway_configuration(const char * conf_file) {
 				MSG("INFO: Skipping disabled server \"%s\"\n", servers[ic].addr);
 				continue;
 			}
-			
+
 			/* All test survived, this is a valid server, report and increase server counter. */
 			MSG("INFO: Server %i configured to \"%s\"\n", ic, servers[ic].addr);
 			/* The server may be valid, it is not yet live. */
@@ -1202,9 +1202,9 @@ int main(int argc, char *argv[])
     int ic; /* Server loop variable */
 
     /* configuration file related */
-    char *global_cfg_name= "global_conf.json"; /* contain global (typ. network-wide) configuration */
-    char *local_cfg_name = "local_conf.json"; /* contain node specific configuration, overwrite global parameters for parameters that are defined in both */
-    char *debug_cfg_name = "debug_conf.json"; /* if present, all other configuration files are ignored */
+    char *global_cfg_name= "/etc/iotloragateway/global_conf.json"; /* contain global (typ. network-wide) configuration */
+    char *local_cfg_name = "/etc/iotloragateway/local_conf.json"; /* contain node specific configuration, overwrite global parameters for parameters that are defined in both */
+    char *debug_cfg_name = "/etc/iotloragateway/debug_conf.json"; /* if present, all other configuration files are ignored */
 
     int opt_ind = 0;
 
@@ -1367,7 +1367,7 @@ int main(int argc, char *argv[])
 		MSG("WARNING: Radio is disabled, radio packets cannot be send or received.\n");
 	}
 
-	
+
     /* spawn threads to manage upstream and downstream */
 	if (upstream_enabled == true) {
     i = pthread_create( &thrid_up, NULL, (void * (*)(void *))thread_up, NULL);
@@ -1387,7 +1387,7 @@ int main(int argc, char *argv[])
 
     /* JIT queue initialization */
     jit_queue_init(&jit_queue);
-    
+
     i = pthread_create( &thrid_jit, NULL, (void * (*)(void *))thread_jit, NULL);
     if (i != 0) {
         MSG("ERROR: [main] impossible to create JIT thread\n");
@@ -1438,7 +1438,7 @@ int main(int argc, char *argv[])
     	ghost_start(ghost_addr,ghost_port,reference_coord,gateway_id);
 		MSG("INFO: [main] Ghost listener started, ghost packets can now be received.\n");
     }
-	
+
     /* Check if we have anything to do */
     if ( (radiostream_enabled == false) && (ghoststream_enabled == false) && (statusstream_enabled == false) ) {
     	MSG("WARNING: [main] All streams have been disabled, gateway may be completely silent.\n");
@@ -1471,17 +1471,17 @@ int main(int argc, char *argv[])
 	    /* move to semtech_transport in due time */
 	    current_time = time(NULL);
 	    pthread_mutex_lock(&mx_meas_up);
-            for (i=0; i<serv_count; i++) { 
+            for (i=0; i<serv_count; i++) {
 		if (servers[i].type == semtech) {
-		    stall_time[i] = (int) (current_time - servers[i].contact); 
+		    stall_time[i] = (int) (current_time - servers[i].contact);
 		}
 	    }
             pthread_mutex_unlock(&mx_meas_up);
-	    for (ic = 0; ic < serv_count; ic++) { 
-	      if ( (servers[i].type == semtech) && (servers[ic].max_stall > 0) && (stall_time[ic] > servers[ic].max_stall) ) { 
+	    for (ic = 0; ic < serv_count; ic++) {
+	      if ( (servers[i].type == semtech) && (servers[ic].max_stall > 0) && (stall_time[ic] > servers[ic].max_stall) ) {
 		MSG("ERROR: [main] for server %s stalled for %i seconds, terminating packet forwarder.\n", servers[ic].addr, stall_time[ic]);
-			exit(EXIT_FAILURE); 
-	      } 
+			exit(EXIT_FAILURE);
+	      }
 	    }
 
 	    last_loop = time(NULL);
@@ -1571,7 +1571,7 @@ void thread_up(void) {
             wait_ms(FETCH_SLEEP_MS);
             continue;
         }
-		
+
 	stats_data_up(nb_pkt, rxpkt);
         transport_data_up(nb_pkt, rxpkt, send_report);
 	if (send_report == true) {
@@ -1851,7 +1851,7 @@ void thread_valid(void) {
     double x;
 
 	MSG("INFO: Validation thread activated.\n");
-	
+
     /* correction debug */
     // FILE * log_file = NULL;
     // time_t now_time;
