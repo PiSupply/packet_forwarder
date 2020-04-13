@@ -1202,9 +1202,9 @@ int main(int argc, char *argv[])
     int ic; /* Server loop variable */
 
     /* configuration file related */
-    char *global_cfg_name= "/opt/iotloragateway/packet_forwarder/global_conf.json"; /* contain global (typ. network-wide) configuration */
-    char *local_cfg_name = "/opt/iotloragateway/packet_forwarder/local_conf.json"; /* contain node specific configuration, overwrite global parameters for parameters that are defined in both */
-    char *debug_cfg_name = "/opt/iotloragateway/packet_forwarder/debug_conf.json"; /* if present, all other configuration files are ignored */
+    char *global_cfg_name= "/opt/iotloragateway/packet_forwarder/global_conf_sg1.json"; /* contain global (typ. network-wide) configuration */
+    char *local_cfg_name = "/opt/iotloragateway/packet_forwarder/local_conf_sg1.json"; /* contain node specific configuration, overwrite global parameters for parameters that are defined in both */
+    char *debug_cfg_name = "/opt/iotloragateway/packet_forwarder/debug_conf_sg1.json"; /* if present, all other configuration files are ignored */
 
     int opt_ind = 0;
 
